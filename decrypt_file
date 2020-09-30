@@ -1,0 +1,43 @@
+def py_decrypt_func(file_patch):
+    from cryptography.fernet import Fernet
+
+    filename = file_patch
+
+    def load_key():
+        """
+        Loads the key from the current directory named `key.key`
+        """
+        return open("key.key", "rb").read()
+
+    # load the previously generated key
+    key = load_key()
+
+    f = Fernet(key)
+
+    def decrypt(filename, key):
+        """
+        Given a filename (str) and key (bytes), it decrypts the file and write it
+        """
+        f = Fernet(key)
+        with open(filename, "rb") as file:
+            # read the encrypted data
+            encrypted_data = file.read()
+        # decrypt data
+        decrypted_data = f.decrypt(encrypted_data)
+        # write the original file
+        with open(filename, "wb") as file:
+            file.write(decrypted_data)
+
+    def loadfile(filename):
+        with open(filename, "rb") as file:
+            # read all file data
+            file_data = file.read()
+            return file_data
+
+    file_data = loadfile(filename)
+
+    print(file_data)
+    print(f.decrypt(file_data))
+
+
+py_decrypt_func("password.txt")
